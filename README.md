@@ -65,7 +65,7 @@ public class ShiroAnnotationInfoListener implements ServletContextListener {
 
 ```
 
-- 在类和方法上添加注解：`@ShiroPermissionInfo`
+- 在需要用到权限控制的 Controller 上，对类和方法上添加注解：`@ShiroPermissionInfo`
 
 ``` java
 import com.youmeek.springboot.annotation.ShiroPermissionInfo;
