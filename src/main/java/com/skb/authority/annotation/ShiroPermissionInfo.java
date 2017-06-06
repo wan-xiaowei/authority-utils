@@ -9,18 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ShiroPermissionInfo {
 
+	String itemId();
 
-	String object_id();
-
-	String object_name();
-
-	String object_type();
-
-	String parent_id() default "";
-
-	String data_type();
-
-	String description() default "";
-
-
+	String itemName();
 }

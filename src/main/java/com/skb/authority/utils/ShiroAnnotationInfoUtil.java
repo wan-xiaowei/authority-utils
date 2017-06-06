@@ -164,12 +164,8 @@ public class ShiroAnnotationInfoUtil {
 			if (classAnnotation.getAnnotation(ShiroPermissionInfo.class) != null) {
 				ShiroPermissionInfo annotationByClass = classAnnotation.getAnnotation(ShiroPermissionInfo.class);
 				SysPermissionInfo sysPermissionInfoByClass = new SysPermissionInfo();
-				sysPermissionInfoByClass.setObject_id(annotationByClass.object_id());
-				sysPermissionInfoByClass.setObject_name(annotationByClass.object_name());
-				sysPermissionInfoByClass.setObject_type(annotationByClass.object_type());
-				sysPermissionInfoByClass.setParent_id(annotationByClass.parent_id());
-				sysPermissionInfoByClass.setData_type(annotationByClass.data_type());
-				sysPermissionInfoByClass.setDescription(annotationByClass.description());
+				sysPermissionInfoByClass.setItemId(annotationByClass.itemId());
+				sysPermissionInfoByClass.setItemName(annotationByClass.itemName());
 				sysPermissionInfoList.add(sysPermissionInfoByClass);
 			}
 
@@ -180,12 +176,8 @@ public class ShiroAnnotationInfoUtil {
 					ShiroPermissionInfo annotationByMethod = method.getAnnotation(ShiroPermissionInfo.class);
 					//stringList.add(annotationByMethod.permissionValue() + " " + annotationByMethod.permissionName() + " " + annotationByMethod.systemName() + " " + annotationByMethod.moduleName() + " " + classAnnotation.getName() + " " + method.getName());
 					SysPermissionInfo sysPermissionInfoByMethod = new SysPermissionInfo();
-					sysPermissionInfoByMethod.setObject_id(annotationByMethod.object_id());
-					sysPermissionInfoByMethod.setObject_name(annotationByMethod.object_name());
-					sysPermissionInfoByMethod.setObject_type(annotationByMethod.object_type());
-					sysPermissionInfoByMethod.setParent_id(annotationByMethod.parent_id());
-					sysPermissionInfoByMethod.setData_type(annotationByMethod.data_type());
-					sysPermissionInfoByMethod.setDescription(annotationByMethod.description());
+					sysPermissionInfoByMethod.setItemId(annotationByMethod.itemId());
+					sysPermissionInfoByMethod.setItemName(annotationByMethod.itemName());
 					sysPermissionInfoList.add(sysPermissionInfoByMethod);
 				}
 			}

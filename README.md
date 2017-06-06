@@ -22,15 +22,15 @@
 <dependency>
     <groupId>com.skb.erp</groupId>
     <artifactId>skb-authority-utils</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
 ### 代码调用
 
 - 基于 Spring Boot 与 Shiro 框架
-- 在 Spring Boot 项目的 Main 类上加上注解：`@ServletComponentScan`，该注解用于扫描：@WebServlet, @WebFilter, @WebListene
-- 添加一个 listener：
+- 1. 在 Spring Boot 项目的 Main 类上加上注解：`@ServletComponentScan`，该注解用于扫描：@WebServlet, @WebFilter, @WebListene
+- 2. 添加一个 listener：
 
 ``` java
 import com.youmeek.springboot.dto.SysPermissionInfo;
@@ -52,9 +52,15 @@ public class ShiroAnnotationInfoListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		List<SysPermissionInfo> list = new ShiroAnnotationInfoUtil().getRequestMapping("com.youmeek.springboot.controller");
+		List<SysPermissionInfo> list = new ShiroAnnotationInfoUtil().getRequestMapping("com.example.demo.controller");
 		this.servletContext = servletContextEvent.getServletContext();
-		servletContext.setAttribute("shiroAnnotationInfoList", list);
+
+		SysPermissionObject sysPermissionObject = new SysPermissionObject();
+		sysPermissionObject.setRouteKey("SellerCube.Feedback");
+		sysPermissionObject.setSystemName("财务系统");
+		sysPermissionObject.setItems(list);
+		
+		servletContext.setAttribute("sysPermissionObject", sysPermissionObject);
 	}
 
 	@Override
@@ -65,12 +71,11 @@ public class ShiroAnnotationInfoListener implements ServletContextListener {
 
 ```
 
-- 在需要用到权限控制的 Controller 上，对类和方法上添加注解：`@ShiroPermissionInfo`
+- 3. 在需要用到权限控制的 Controller 上，对类和方法上添加注解：`@ShiroPermissionInfo`
 
 ``` java
-import com.youmeek.springboot.annotation.ShiroPermissionInfo;
-import com.youmeek.springboot.dto.SysPermissionInfo;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.skb.authority.annotation.ShiroPermissionInfo;
+import com.skb.authority.dto.SysPermissionObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -78,10 +83,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Controller
-@ShiroPermissionInfo(object_id = "SellerCube.Feedback.SysUserController", object_name = "客服系统-用户模块", object_type = "52", data_type = "4")
+@ShiroPermissionInfo(itemId = "SellerCube.Feedback.SysUserController", itemName = "财务系统-用户模块")
 public class SysUserController {
 
 	/**
@@ -92,10 +96,10 @@ public class SysUserController {
 	 */
 	@RequestMapping(value = "/shiroAnnotationListTest", method = RequestMethod.GET)
 	@ResponseBody
-	public List<SysPermissionInfo> shiroTest(HttpServletRequest request) {
+	public SysPermissionObject shiroTest(HttpServletRequest request) {
 		//获取 shiro 的所有注解信息
 		ServletContext servletContext = request.getServletContext();
-		return (List<SysPermissionInfo>) servletContext.getAttribute("shiroAnnotationInfoList");
+		return (SysPermissionObject) servletContext.getAttribute("sysPermissionObject");
 	}
 
 	/**
@@ -104,7 +108,7 @@ public class SysUserController {
 	 * @return
 	 */
 	@RequiresPermissions("SellerCube.Feedback.SysUserController.add")
-	@ShiroPermissionInfo(object_id = "SellerCube.Feedback.SysUserController.add", object_name = "客服系统-用户模块-新增", object_type = "53", data_type = "4", parent_id = "SellerCube.Feedback.SysUserController")
+	@ShiroPermissionInfo(itemId = "SellerCube.Feedback.SysUserController.add", itemName = "财务系统-用户模块-新增", object_type = "53", data_type = "4", parent_id = "SellerCube.Feedback.SysUserController")
 	@RequestMapping(value = "/needAuthcApi/test", method = RequestMethod.GET)
 	public String needAuthcApiTest() {
 		return "requestSuccess";
@@ -116,7 +120,7 @@ public class SysUserController {
 	 * @return
 	 */
 	@RequiresPermissions("SellerCube.Feedback.SysUserController.list")
-	@ShiroPermissionInfo(object_id = "SellerCube.Feedback.SysUserController.list", object_name = "客服系统-用户模块-列表", object_type = "53", data_type = "4", parent_id = "SellerCube.Feedback.SysUserController")
+	@ShiroPermissionInfo(itemId = "SellerCube.Feedback.SysUserController.list", itemName = "财务系统-用户模块-列表", object_type = "53", data_type = "4", parent_id = "SellerCube.Feedback.SysUserController")
 	@RequestMapping(value = "/needUserApi/test", method = RequestMethod.GET)
 	public String needUserApiTest() {
 		return "requestSuccess";
@@ -125,12 +129,31 @@ public class SysUserController {
 ```
 
 - 注解：`@ShiroPermissionInfo` 的几个参数说明：
-	- `object_id` 为权限的标识符，可以作用在类和方法上。object_id 在类和方法是父子关系，该值不能填写错误，且需要和 @RequiresPermissions 注解一样。
-	- `object_name` 为该权限的描述
-	- `object_type` 51 为系统命名空间，52 为类命名空间，53 为类中方法命名空间
-	- `data_type` java 项目统一设置为 4
+	- `itemId` 为权限的标识符，可以作用在类和方法上。itemId 需要和 @RequiresPermissions 注解内容一样。
+	- `itemName` 为该权限的描述
 
+- 最终权限中心拿到的 JSON 格式为：
 
+``` json
+{
+  routeKey: "SellerCube.Feedback",
+  systemName: "财务系统",
+  items: [
+    {
+      itemId: "SellerCube.Feedback.SysUserController",
+      itemName: "财务系统-用户模块"
+    },
+    {
+      itemId: "SellerCube.Feedback.SysUserController.list",
+      itemName: "财务系统-用户模块-列表"
+    },
+    {
+      itemId: "SellerCube.Feedback.SysUserController.add",
+      itemName: "财务系统-用户模块-新增"
+    }
+  ]
+}
+```
 
 
 
