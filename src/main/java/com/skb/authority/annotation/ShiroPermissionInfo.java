@@ -9,7 +9,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ShiroPermissionInfo {
 
-	String itemId();
+	/**
+	 * 如果没有指定，默认反射当前类名+方法名
+	 *
+	 * @return
+	 */
+	String itemId() default "";
 
 	String itemName();
 }

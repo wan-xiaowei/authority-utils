@@ -3,6 +3,7 @@ package com.skb.authority.utils;
 
 import com.skb.authority.annotation.ShiroPermissionInfo;
 import com.skb.authority.dto.SysPermissionInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -161,10 +162,16 @@ public class ShiroAnnotationInfoUtil {
 
 	private void setRequestMapping(List<Class<?>> list) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
 		for (Class<?> classAnnotation : list) {
+			String classPathName = classAnnotation.getName();//格式：com.youmeek.springboot.controller.SysUserController
+
 			if (classAnnotation.getAnnotation(ShiroPermissionInfo.class) != null) {
 				ShiroPermissionInfo annotationByClass = classAnnotation.getAnnotation(ShiroPermissionInfo.class);
 				SysPermissionInfo sysPermissionInfoByClass = new SysPermissionInfo();
-				sysPermissionInfoByClass.setItemId(annotationByClass.itemId());
+				if (StringUtils.isBlank(annotationByClass.itemId())) {
+					sysPermissionInfoByClass.setItemId(classPathName);
+				} else {
+					sysPermissionInfoByClass.setItemId(annotationByClass.itemId());
+				}
 				sysPermissionInfoByClass.setItemName(annotationByClass.itemName());
 				sysPermissionInfoList.add(sysPermissionInfoByClass);
 			}
@@ -176,7 +183,11 @@ public class ShiroAnnotationInfoUtil {
 					ShiroPermissionInfo annotationByMethod = method.getAnnotation(ShiroPermissionInfo.class);
 					//stringList.add(annotationByMethod.permissionValue() + " " + annotationByMethod.permissionName() + " " + annotationByMethod.systemName() + " " + annotationByMethod.moduleName() + " " + classAnnotation.getName() + " " + method.getName());
 					SysPermissionInfo sysPermissionInfoByMethod = new SysPermissionInfo();
-					sysPermissionInfoByMethod.setItemId(annotationByMethod.itemId());
+					if (StringUtils.isBlank(annotationByMethod.itemId())) {
+						sysPermissionInfoByMethod.setItemId(classPathName + "." + method.getName());
+					} else {
+						sysPermissionInfoByMethod.setItemId(annotationByMethod.itemId());
+					}
 					sysPermissionInfoByMethod.setItemName(annotationByMethod.itemName());
 					sysPermissionInfoList.add(sysPermissionInfoByMethod);
 				}

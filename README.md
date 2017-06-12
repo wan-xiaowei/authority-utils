@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.skb.erp</groupId>
     <artifactId>skb-authority-utils</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
@@ -85,7 +85,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@ShiroPermissionInfo(itemId = "SellerCube.Feedback.SysUserController", itemName = "财务系统-用户模块")
+@ShiroPermissionInfo(itemName = "财务系统-用户模块")
 public class SysUserController {
 
 	/**
@@ -94,9 +94,9 @@ public class SysUserController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/shiroAnnotationListTest", method = RequestMethod.GET)
+	@RequestMapping(value = "/systemAuthList", method = RequestMethod.GET)
 	@ResponseBody
-	public SysPermissionObject shiroTest(HttpServletRequest request) {
+	public SysPermissionObject systemAuthList(HttpServletRequest request) {
 		//获取 shiro 的所有注解信息
 		ServletContext servletContext = request.getServletContext();
 		return (SysPermissionObject) servletContext.getAttribute("sysPermissionObject");
@@ -108,9 +108,9 @@ public class SysUserController {
 	 * @return
 	 */
 	@RequiresPermissions("SellerCube.Feedback.SysUserController.add")
-	@ShiroPermissionInfo(itemId = "SellerCube.Feedback.SysUserController.add", itemName = "财务系统-用户模块-新增", object_type = "53", data_type = "4", parent_id = "SellerCube.Feedback.SysUserController")
-	@RequestMapping(value = "/needAuthcApi/test", method = RequestMethod.GET)
-	public String needAuthcApiTest() {
+	@ShiroPermissionInfo(itemName = "财务系统-用户模块-新增")
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String add() {
 		return "requestSuccess";
 	}
 
@@ -120,17 +120,17 @@ public class SysUserController {
 	 * @return
 	 */
 	@RequiresPermissions("SellerCube.Feedback.SysUserController.list")
-	@ShiroPermissionInfo(itemId = "SellerCube.Feedback.SysUserController.list", itemName = "财务系统-用户模块-列表", object_type = "53", data_type = "4", parent_id = "SellerCube.Feedback.SysUserController")
-	@RequestMapping(value = "/needUserApi/test", method = RequestMethod.GET)
-	public String needUserApiTest() {
+	@ShiroPermissionInfo(itemName = "财务系统-用户模块-列表")
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public String list() {
 		return "requestSuccess";
 	}
 }
 ```
 
 - 注解：`@ShiroPermissionInfo` 的几个参数说明：
-	- `itemId` 为权限的标识符，可以作用在类和方法上。itemId 需要和 @RequiresPermissions 注解内容一样。
-	- `itemName` 为该权限的描述
+	- `itemId` 为权限的标识符（非必填），可以作用在类和方法上。itemId 可以为空，为空的时候取当前类路径+类名+方法名
+	- `itemName` 为该权限的描述（必填）
 
 - 最终权限中心拿到的 JSON 格式为：
 
