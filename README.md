@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.skb.erp</groupId>
     <artifactId>skb-authority-utils</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
