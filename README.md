@@ -107,7 +107,6 @@ public class SysUserController {
 	 *
 	 * @return
 	 */
-	@RequiresPermissions("SellerCube.Feedback.SysUserController.add")
 	@ShiroPermissionInfo(itemName = "财务系统-用户模块-新增")
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add() {
@@ -119,7 +118,6 @@ public class SysUserController {
 	 *
 	 * @return
 	 */
-	@RequiresPermissions("SellerCube.Feedback.SysUserController.list")
 	@ShiroPermissionInfo(itemName = "财务系统-用户模块-列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String list() {
