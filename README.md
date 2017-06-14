@@ -52,11 +52,12 @@ public class ShiroAnnotationInfoListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		List<SysPermissionInfo> list = new ShiroAnnotationInfoUtil().getRequestMapping("com.example.demo.controller");
+		String systemCode = "SellerCube.Feedback";
+		List<SysPermissionInfo> list = new ShiroAnnotationInfoUtil().getRequestMapping("com.example.demo.controller",systemCode);
 		this.servletContext = servletContextEvent.getServletContext();
 
 		SysPermissionObject sysPermissionObject = new SysPermissionObject();
-		sysPermissionObject.setRouteKey("SellerCube.Feedback");
+		sysPermissionObject.setRouteKey(systemCode);
 		sysPermissionObject.setSystemName("财务系统");
 		sysPermissionObject.setItems(list);
 		
@@ -74,8 +75,6 @@ public class ShiroAnnotationInfoListener implements ServletContextListener {
 - 3. 在需要用到权限控制的 Controller 上，对类和方法上添加注解：`@ShiroPermissionInfo`
 
 ``` java
-import com.skb.authority.annotation.ShiroPermissionInfo;
-import com.skb.authority.dto.SysPermissionObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -138,15 +137,15 @@ public class SysUserController {
   systemName: "财务系统",
   items: [
     {
-      itemId: "SellerCube.Feedback.SysUserController",
+      itemId: "SellerCube.Feedback.com.skb.user.SysUserController",
       itemName: "财务系统-用户模块"
     },
     {
-      itemId: "SellerCube.Feedback.SysUserController.list",
+      itemId: "SellerCube.Feedback.com.skb.user.SysUserController.list",
       itemName: "财务系统-用户模块-列表"
     },
     {
-      itemId: "SellerCube.Feedback.SysUserController.add",
+      itemId: "SellerCube.Feedback.com.skb.user.SysUserController.add",
       itemName: "财务系统-用户模块-新增"
     }
   ]

@@ -138,7 +138,7 @@ public class ShiroAnnotationInfoUtil {
 		return Thread.currentThread().getContextClassLoader().getResource("") + "";//获取src路径
 	}
 
-	private void setRequestMapping(List<Class<?>> list) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
+	private void setRequestMapping(List<Class<?>> list, String systemCode) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
 		for (Class<?> classAnnotation : list) {
 			String classPathName = classAnnotation.getName();//格式：com.youmeek.springboot.controller.SysUserController
 
@@ -146,7 +146,7 @@ public class ShiroAnnotationInfoUtil {
 				ShiroPermissionInfo annotationByClass = classAnnotation.getAnnotation(ShiroPermissionInfo.class);
 				SysPermissionInfo sysPermissionInfoByClass = new SysPermissionInfo();
 				if (StringUtils.isBlank(annotationByClass.itemId())) {
-					sysPermissionInfoByClass.setItemId(classPathName);
+					sysPermissionInfoByClass.setItemId(systemCode + "." + classPathName);
 				} else {
 					sysPermissionInfoByClass.setItemId(annotationByClass.itemId());
 				}
@@ -162,7 +162,7 @@ public class ShiroAnnotationInfoUtil {
 					//stringList.add(annotationByMethod.permissionValue() + " " + annotationByMethod.permissionName() + " " + annotationByMethod.systemName() + " " + annotationByMethod.moduleName() + " " + classAnnotation.getName() + " " + method.getName());
 					SysPermissionInfo sysPermissionInfoByMethod = new SysPermissionInfo();
 					if (StringUtils.isBlank(annotationByMethod.itemId())) {
-						sysPermissionInfoByMethod.setItemId(classPathName + "." + method.getName());
+						sysPermissionInfoByMethod.setItemId(systemCode + "." + classPathName + "." + method.getName());
 					} else {
 						sysPermissionInfoByMethod.setItemId(annotationByMethod.itemId());
 					}
@@ -173,10 +173,10 @@ public class ShiroAnnotationInfoUtil {
 		}
 	}
 
-	public List<SysPermissionInfo> getRequestMapping(String packageName) throws IOException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+	public List<SysPermissionInfo> getRequestMapping(String packageName, String systemCode) throws IOException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
 		sysPermissionInfoList = new ArrayList<SysPermissionInfo>();
 		List<Class<?>> list = getClassList(packageName);//获取com.youmeek.springboot.controller目录下所有的类
-		setRequestMapping(list);//选择符合条件的类，并且把类中所有的路劲，方法储存到list中
+		setRequestMapping(list, systemCode);//选择符合条件的类，并且把类中所有的路劲，方法储存到list中
 		return sysPermissionInfoList;
 	}
 
