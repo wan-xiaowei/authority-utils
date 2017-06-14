@@ -140,7 +140,8 @@ public class ShiroAnnotationInfoUtil {
 
 	private void setRequestMapping(List<Class<?>> list, String systemCode) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
 		for (Class<?> classAnnotation : list) {
-			String classPathName = classAnnotation.getName();//格式：com.youmeek.springboot.controller.SysUserController
+			//String classPathName = classAnnotation.getName();//格式：com.youmeek.springboot.controller.SysUserController
+			String classPathName = classAnnotation.getSimpleName();//格式：com.youmeek.springboot.controller.SysUserController
 
 			if (classAnnotation.getAnnotation(ShiroPermissionInfo.class) != null) {
 				ShiroPermissionInfo annotationByClass = classAnnotation.getAnnotation(ShiroPermissionInfo.class);
