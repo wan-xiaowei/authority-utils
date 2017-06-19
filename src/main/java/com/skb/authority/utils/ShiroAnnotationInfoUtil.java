@@ -20,7 +20,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class ShiroAnnotationInfoUtil {
-	
+
 	private List<SysPermissionInfo> sysPermissionInfoList;
 
 	/**
@@ -154,6 +154,12 @@ public class ShiroAnnotationInfoUtil {
 				sysPermissionInfoByClass.setItemName(annotationByClass.itemName());
 				sysPermissionInfoList.add(sysPermissionInfoByClass);
 			}
+
+			// .net 要求默认要有一个 index 的方法
+			SysPermissionInfo sysPermissionInfoByClass = new SysPermissionInfo();
+			sysPermissionInfoByClass.setItemId(systemCode + "." + classPathName + ".index");
+			sysPermissionInfoByClass.setItemName("首页");
+			sysPermissionInfoList.add(sysPermissionInfoByClass);
 
 			Method[] methods = classAnnotation.getMethods();
 			for (Method method : methods) {
